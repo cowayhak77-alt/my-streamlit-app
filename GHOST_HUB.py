@@ -18,11 +18,29 @@ load_dotenv()
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 
-GENAI_API_KEY = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY") or st.secrets.get("UNSPLASH_ACCESS_KEY")
+# API 키 로드 함수 (로컬 .env 및 Streamlit Secrets 지원)
+def get_env_or_secret(key):
+    # 1. 로컬 .env 또는 시스템 환경변수 확인
+    val = os.getenv(key)
+    if val and "넣으세요" not in val: # 가이드 문구 무시
+        return val
+    
+    # 2. Streamlit Secrets 확인 (클라우드 배포용)
+    try:
+        return st.secrets.get(key)
+    except:
+        return None
+
+GENAI_API_KEY = get_env_or_secret("GEMINI_API_KEY")
+UNSPLASH_ACCESS_KEY = get_env_or_secret("UNSPLASH_ACCESS_KEY")
 
 if not GENAI_API_KEY:
-    st.error("🚨 GEMINI_API_KEY를 .env 파일에서 찾을 수 없습니다.")
+    st.error("🚨 GEMINI_API_KEY를 찾을 수 없습니다.")
+    st.info("""
+    **설정 방법:**
+    1. **로컬(PC) 실행 시:** 폴더 내 `.env` 파일을 열고 `GEMINI_API_KEY=본인의키`를 입력하세요.
+    2. **클라우드 배포 시:** 스트림릿 관리창의 **Settings > Secrets**에 `GEMINI_API_KEY = "본인의키"`를 입력하세요.
+    """)
     st.stop()
 
 genai.configure(api_key=GENAI_API_KEY)
