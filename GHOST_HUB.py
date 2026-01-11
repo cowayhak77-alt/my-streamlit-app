@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import io
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -18,11 +18,8 @@ load_dotenv()
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 
-import streamlit as st
-
-# Streamlit secrets 사용 (os.getenv 대신)
-GENAI_API_KEY = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
-UNSPLASH_ACCESS_KEY = st.secrets.get("UNSPLASH_ACCESS_KEY", os.getenv("UNSPLASH_ACCESS_KEY"))
+GENAI_API_KEY = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
+UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY") or st.secrets.get("UNSPLASH_ACCESS_KEY")
 
 if not GENAI_API_KEY:
     st.error("🚨 GEMINI_API_KEY를 .env 파일에서 찾을 수 없습니다.")
