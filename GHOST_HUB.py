@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import io
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 from dotenv import load_dotenv
 from datetime import datetime
 
