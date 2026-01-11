@@ -18,8 +18,8 @@ load_dotenv()
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding='utf-8')
 
-GENAI_API_KEY = os.getenv("GEMINI_API_KEY")
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
+gemini_key = st.secrets.get("GEMINI_API_KEY")
+unsplash_key = st.secrets.get("UNSPLASH_ACCESS_KEY")
 
 if not GENAI_API_KEY:
     st.error("🚨 GEMINI_API_KEY를 .env 파일에서 찾을 수 없습니다.")
